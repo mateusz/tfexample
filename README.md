@@ -2,7 +2,7 @@
 
 This example let's you create an AWS EC2 instance you can log in to via SSH.
 
-Document below assumes you know how handle authentication. We reccomend to use aws-vault :)
+I assume you know how handle authentication - I reccomend to use aws-vault :)
 
 ## Usage
 
@@ -45,6 +45,8 @@ After the plan completes, you should be shown the EC2 instance's public IP as te
 You can now start playing around with the resources you have created - edit `main.tf` to remove, change or add resources, then run
 `terraform apply` to update the actual infrastructure!
 
+All available AWS resources are documented in the [AWS provider docs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs).
+
 ### Cleanup 
 
 After you are done, don't forget to remove:
@@ -61,3 +63,6 @@ which is just stored on your hard drive - look for `terraform.tfstate` file in t
 If you remove this file, terraform will lose track of the resources, and you will need to manage (delete) those by hand :) This
 is not straightforward, as there is nothing in AWS that tells you the resources have been create by Terraform, and not all resources
 can be tagged!
+
+Locally stored state is great for experimentation. In a production environment, state would be stored somewhere in a cloud (e.g. in S3),
+and access would be controlled via locks. 
