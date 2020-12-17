@@ -40,9 +40,14 @@ After the plan completes, you should be shown the EC2 instance's public IP as te
 
     ssh ubuntu@<public-ip>
 
+### Play around
+
+You can now start playing around with the resources you have created - edit `main.tf` to remove, change or add resources, then run
+`terraform apply` to update the actual infrastructure!
+
 ### Cleanup 
 
-After you are done, don't forget to remove!
+After you are done, don't forget to remove:
 
     terraform destroy
 
