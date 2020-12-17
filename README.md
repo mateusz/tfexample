@@ -2,7 +2,14 @@
 
 This example let's you create an AWS EC2 instance you can log in to via SSH.
 
-I assume you know how handle authentication - I reccomend to use aws-vault :)
+## Preparation
+
+[Download terraform](https://www.terraform.io/downloads.html). You can place the binary wherever you want,
+and nothing else is needed.
+
+Configure your aws-vault to get AWS access rights. Docs below will *not* be shown with aws-vault prefix. Use it thus:
+
+    aws-vault <account> exec -- <actual command>
 
 ## Usage
 
