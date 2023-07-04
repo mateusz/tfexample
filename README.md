@@ -17,9 +17,9 @@ Configure your aws-vault to get AWS access rights. Docs below will *not* be show
 
 Create an SSH keypair (this cannot be currently created by terraform):
 
-    aws ec2 create-key-pair --key-name tfexample --output text
+    aws ec2 create-key-pair --key-name tfexample --output text | cat
 
-Copy the private key part and paste it into your, then add it to your ssh agent. On mac:
+Copy the private key part and paste it into a file in `.ssh`, then add it to your ssh agent. On mac:
 
     pbpaste > ~/.ssh/tfexample
     chmod 600 ~/.ssh/tfexample
@@ -34,6 +34,10 @@ You can also [supply those variables in other ways](https://www.terraform.io/doc
 like locally editing files in version control.
 
 ### Create infra
+
+Initialise terraform:
+
+    terraform init
 
 Now you are ready to create resources:
 
@@ -54,15 +58,9 @@ You can now start playing around with the resources you have created - edit `mai
 
 All available AWS resources are documented in the [AWS provider docs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs).
 
-### Cleanup 
+### Understand state
 
-After you are done, don't forget to remove:
-
-    terraform destroy
-
-## Note on state
-
-[State](https://www.terraform.io/docs/state/index.html) is one of the most important concepts in terraform.
+[State](https://developer.hashicorp.com/terraform/language/state) is one of the most important concepts in terraform.
 
 For terraform to know which resources it's supposed to manage, it creates a thing called state. In this example default state is used,
 which is just stored on your hard drive - look for `terraform.tfstate` file in this directory.
@@ -73,3 +71,32 @@ can be tagged!
 
 Locally stored state is great for experimentation. In a production environment, state would be stored somewhere in a cloud (e.g. in S3),
 and access would be controlled via locks. 
+
+State can be a source of discrepancies if resources are modified or deleted on the infrastructure by hand, causing state drift.
+To deal with these problems, terraform provides an [ability to manage state by hand](https://developer.hashicorp.com/terraform/tutorials/state/state-cli).
+Here is a simple example you can run on the CLI:
+
+    terraform state rm aws_subnet.tfexample
+
+Terraform will stop managing that particular resource ("forget" it), and if you run `terraform apply`, it will attempt to recreate it
+(and end up failing because of a name clash).
+
+You can bring the resource back into terraform state by looking up the ID, either in AWS Console, or in the terraform output:
+
+    aws_subnet.tfexample: Refreshing state... [id=subnet-034dc30e6c6ed5891]
+
+Import into state:
+
+    terraform import aws_subnet.tfexample subnet-034dc30e6c6ed5891
+
+Run apply again - you should see terraform happy again.
+
+### Cleanup 
+
+After you are done, don't forget to remove:
+
+    terraform destroy
+
+Remove the key pair:
+
+    aws ec2 delete-key-pair --key-name tfexample
