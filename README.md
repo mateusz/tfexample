@@ -1,6 +1,6 @@
 # Terraform example
 
-This example let's you create an AWS EC2 instance you can log in to via SSH.
+This example lets you create an AWS EC2 instance you can log in to via SSH.
 
 ## Preparation
 
